@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}日々の成果を投稿しよう|My Blog{% endblock %}
+
+{% block header %}
+<!-- Page header with logo and tagline-->
+<header class="py-5 bg-light border-bottom mb-4">
+    <div class="container">
+        <div class="text-center my-5">
+            <h1 class="fw-bolder">My Blog</h1>
+            <p class="lead mb-0">-日々の足跡を綴る場所-</p>
+
+            {% if user.is_authenticated %}
+            <a class="btn btn-primary btn-xl rounded-pill mt-5" href="{% url 'blog:blog_create' %}">新規投稿</a></li>
+            {% else %}
+            <a  href="{% url 'account_login' %}" class="btn btn-primary btn-xl rounded-pill mt-5">ログイン</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+{% block contents %}
+<!-- Page content-->
+<div class="container">
+    <div class="row">
+        <h2 class="card-title h4">最近の投稿</h2>
+        <!-- Blog entries-->
+        <div class="col-lg-8">
+            <!-- 最新の投稿-->
+            {% if latest_post %}
+            <div class="card mb-4">
+                {% if latest_post.photo %}
+                <a href="{% url 'blog:blog_detail' latest_post.pk %}">
+                    <img class="card-img-top latest-post-img" src="{{ latest_post.photo.url }}" alt="..." />
+                </a>
+                {% endif %}
+                <div class="card-body">
+                    <div class="small text-muted">{{ latest_post.created_at }}</div>
+                    <h2 class="card-title">{{ latest_post.title }}</h2>
+                    <p class="card-text">{{ latest_post.content|truncatechars:30 }}</p>
+                    <a class="btn btn-primary" href="{% url 'blog:blog_detail' latest_post.pk %}">詳細 →</a>
+                </div>
+            </div>
+            {% endif %}
+            <!-- その他過去の投稿-->
+            <div class="row">
+                {% for post in older_posts %}
+                <div class="col-lg-6 mb-4">
+                    <div class="card">
+                        {% if post.photo %}
+                        <a href="{% url 'blog:blog_detail' post.pk %}">
+                            <img class="card-img-top older-post-img" src="{{ post.photo.url }}" alt="..." />
+                        </a>
+                        {% endif %}
+                        <div class="card-body">
+                            <div class="small text-muted">{{ post.created_at }}</div>
+                            <h2 class="card-title">{{ post.title }}</h2>
+                            <p class="card-text">{{ post.content }}</p>
+                            <a class="btn btn-primary" href="{% url 'blog:blog_detail' post.pk %}">詳細 →</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+        <!-- Side widgets-->
+        <div class="col-lg-4">
+
+            <!-- 検索ウェジット-->
+            <div class="card mb-4">
+                <div class="card-header">Search</div>
+                <div class="card-body">
+                    <form class="input-group" method="GET" action="{% url 'blog:blog_search' %}">
+                        <input class="form-control" type="text" name="title" value="{{ title }}" placeholder="キーワードを入力" aria-label="Enter search term..." aria-describedby="button-search" />
+                        <input class="btn btn-primary" id="button-search" type="submit" value="検索"></button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Side widget-->
+            <div class="card mb-4">
+                <div class="card-header">About Me</div>
+                <div class="card-body">エンジニア転職に向けて日々勉強中です。
+                    HTML, CSS, SQL, Git, Github, Python, Django等のスキルを習得中。</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

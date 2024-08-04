@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}投稿編集|My Blog{% endblock %}
+
+{% block active_blog_list %}active{% endblock %}
+
+{% block contents %}
+<div class="container my-div-style">
+    <div class="row">
+        <form method="post" enctype='multipart/form-data'>
+            {% csrf_token %}
+            <table class="table">
+                {{ form.as_table }}
+            </table>
+            <button class="btn btn-primary" type="submit">更新</button>
+            <a class="btn btn-primary ml-2" href="{% url 'blog:blog_detail' object.pk %}">キャンセル</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

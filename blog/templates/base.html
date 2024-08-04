@@ -1,0 +1,75 @@
+{% load static %}
+
+<html lang="ja">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>{% block title%}{% endblock %}</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{% static 'css/blog-home.css' %}" rel="stylesheet" />
+        <link rel="stylesheet" href="{% static 'css/mystyle.css' %}">
+        {% block head%}{% endblock %}
+    </head>
+    <body>
+        <div id="wrapper">
+            <!-- Responsive navbar-->
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="container">
+                    <a class="navbar-brand" href="{% url 'blog:index' %}">【My blog】</a>
+                    {% if user.is_authenticated %}
+                    <p class="m-0 text-center text-white">こんにちは、{{ user.username }} さん</p>
+                    {% else %}
+                    <p class="m-0 text-center text-white">まだログインしていません。</p>
+                    {% endif %}
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'blog:contact' %}">お問い合わせ</a></li>
+                            {% if user.is_authenticated %}
+                            <li class="nav-item"><a class="nav-link {% block active_blog_list %}{% endblock %}" href="{% url 'blog:blog_list' %}">投稿一覧</a></li>
+                            {% endif %}
+
+                            {% if user.is_authenticated %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">ログアウト</a></li>
+                            {% else %}
+                            <li class="nav-item"><a class="nav-link {% block active_signup %}{% endblock %}" href="{% url 'account_signup' %}">サインアップ</a></li>
+                            <li class="nav-item"><a class="nav-link {% block active_login %}{% endblock %}" href="{% url 'account_login' %}">ログイン</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            {% block header %}{% endblock %}
+
+            {% if messages %}
+            <div class="container my-div-style">
+                <div class="row">
+                    <ul class="messages" style="list-style: none;">
+                        {% for message in messages %}
+                        <li {% if message.tags %} class="{{message.tags}}"{% endif %}>
+                            {{ message }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+
+            {% block contents %}{% endblock %}
+
+            <!-- Footer-->
+            <footer class="py-5 bg-dark">
+                <div class="container"><p class="m-0 text-center text-white">Copyright &copy; My Blog 2024</p></div>
+            </footer>
+            <!-- Bootstrap core JS-->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+            <!-- Core theme JS-->
+            <script src="js/scripts.js"></script>
+        </div>
+    </body>
+</html>

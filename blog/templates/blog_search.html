@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}投稿検索|My Blog{% endblock title %}
+
+{% block active_blog_list %}active{% endblock %}
+
+{% block contents %}
+<div class="container mt-3">
+    {% for blog in blog_list %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title h4">タイトル: <a href="{% url 'blog:blog_detail' blog.pk %}">{{ blog.title }}</a></h5>
+            <p class="card-text">{{ blog.content|truncatechars_html:20|linebreaksbr }}</p>
+        </div>
+    </div>
+    {% empty %}
+    <p>検索結果がありませんでした。</p>
+    {% endfor %}
+    <a class="btn btn-dark mt-5 ml-2 mb-3" href="{% url 'blog:index' %}">ホームに戻る</a>
+</div>
+
+{% endblock %}
